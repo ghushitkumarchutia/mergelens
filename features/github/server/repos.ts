@@ -27,7 +27,7 @@ export type InstallationReposPage = {
 };
 
 function mapRepo(repo: {
-  id: number;
+  id: number | bigint;
   name: string;
   full_name: string;
   private?: boolean;
