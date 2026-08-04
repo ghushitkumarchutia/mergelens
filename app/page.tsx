@@ -22,7 +22,7 @@ export default function Home() {
         <div className='mx-auto flex h-14 max-w-6xl items-center justify-between px-6'>
           <Link href='/' className='flex items-center gap-2'>
             <Image
-              src='/logo2.svg'
+              src='/logo.svg'
               alt='MergeLens'
               width={32}
               height={32}
@@ -216,7 +216,7 @@ export default function Home() {
         <div className='mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 sm:flex-row'>
           <div className='flex items-center gap-2'>
             <Image
-              src='/logo2.svg'
+              src='/logo.svg'
               alt=''
               width={20}
               height={20}
