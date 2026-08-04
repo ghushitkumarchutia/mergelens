@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@hugeicons/core-free-icons": "^4.2.3",
+    "@hugeicons/react": "^1.1.9",
     "@openrouter/ai-sdk-provider": "^3.0.0",
     "@phosphor-icons/react": "^2.1.10",
     "@pinecone-database/pinecone": "^8.2.0",
@@ -30,6 +32,7 @@
     "next-themes": "^0.4.6",
     "octokit": "^5.0.5",
     "pg": "^8.22.0",
+    "postcss": "^8.5.25",
     "razorpay": "^2.9.8",
     "react": "19.2.8",
     "react-day-picker": "^10.0.1",
@@ -43,7 +46,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/pg": "^8.20.3",
     "@types/react": "^19",
@@ -51,7 +54,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "prisma": "^7.9.1",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5"
   }
 }
