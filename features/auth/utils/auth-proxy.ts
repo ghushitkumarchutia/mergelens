@@ -1,4 +1,4 @@
-import { getSafeCallbackPath, SIGN_IN_PATH } from "./index";
+import { SIGN_IN_PATH } from "./index";
 import { NextRequest, NextResponse } from "next/server";
 
 const SESSION_COOKIE_NAME = "better-auth.session_token";
@@ -20,11 +20,6 @@ function redirectToSignIn(request: NextRequest, pathname: string) {
   return NextResponse.redirect(signInUrl);
 }
 
-function getPostAuthRedirectPath(request: NextRequest): string {
-  const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
-  return getSafeCallbackPath(callbackUrl);
-}
-
 export async function handleAuthProxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -32,13 +27,11 @@ export async function handleAuthProxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasSession = hasSessionCookie(request);
-
   if (pathname === SIGN_IN_PATH) {
     return NextResponse.next();
   }
 
-  if (!hasSession) {
+  if (!hasSessionCookie(request)) {
     return redirectToSignIn(request, pathname);
   }
 
