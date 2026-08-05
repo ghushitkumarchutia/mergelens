@@ -17,7 +17,7 @@ export function getGithubApp() {
 }
 
 export function getGithubInstallUrl(userId: string) {
-  const appName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME || "mergelen";
+  const appName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME || "mergelens-pr";
   const url = new URL(`https://github.com/apps/${appName}/installations/new`);
   url.searchParams.set("state", userId);
   return url.toString();
