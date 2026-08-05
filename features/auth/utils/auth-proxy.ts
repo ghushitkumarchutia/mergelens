@@ -35,11 +35,6 @@ export async function handleAuthProxy(request: NextRequest) {
   const hasSession = hasSessionCookie(request);
 
   if (pathname === SIGN_IN_PATH) {
-    if (hasSession) {
-      const redirectPath = getPostAuthRedirectPath(request);
-      return NextResponse.redirect(new URL(redirectPath, request.url));
-    }
-
     return NextResponse.next();
   }
 
