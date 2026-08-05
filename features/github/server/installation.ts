@@ -1,7 +1,7 @@
+import { cache } from "react";
 import type { GithubInstallationStatus } from "@/features/dashboard/lib/types";
 import { getGithubApp } from "@/features/github/utils/github-app";
 import { prisma } from "@/lib/db";
-
 function getAccountLogin(
   account: { login?: string; slug?: string } | null | undefined,
 ): string | null {
@@ -24,7 +24,7 @@ function buildDisconnectedStatus(): GithubInstallationStatus {
   return { connected: false, accountLogin: null, installedAt: null };
 }
 
-export async function getInstallationStatus(userId: string) {
+export const getInstallationStatus = cache(async function getInstallationStatus(userId: string) {
   const installation = await prisma.githubInstallation.findUnique({
     where: {
       userId,
@@ -40,7 +40,7 @@ export async function getInstallationStatus(userId: string) {
     accountLogin: installation.accountLogin,
     installedAt: installation.createdAt.toISOString(),
   };
-}
+});
 
 export async function saveInstallation(userId: string, installationId: number) {
   const app = getGithubApp();
@@ -85,7 +85,7 @@ export async function getUserIdByInstallationId(installationId: number) {
   return installation.userId;
 }
 
-export async function getUserInstallationId(userId: string) {
+export const getUserInstallationId = cache(async function getUserInstallationId(userId: string) {
   const installation = await prisma.githubInstallation.findUnique({
     where: { userId },
     select: { installationId: true },
@@ -96,4 +96,4 @@ export async function getUserInstallationId(userId: string) {
   }
 
   return installation.installationId;
-}
+});

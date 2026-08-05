@@ -1,11 +1,12 @@
+import { cache } from "react";
 import type { UserSubscription } from "@/features/dashboard/lib/types";
 import { getRazorpay } from "@/features/billing/lib/razorpay";
 import { prisma } from "@/lib/db";
-
-export async function getUserSubscription(
-  userId: string,
-): Promise<UserSubscription> {
-  const user = await prisma.user.findUnique({
+export const getUserSubscription = cache(
+  async function getUserSubscription(
+    userId: string,
+  ): Promise<UserSubscription> {
+    const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       plan: true,
@@ -49,7 +50,7 @@ export async function getUserSubscription(
   }
 
   return { plan: "free", status: "canceled", renewsAt };
-}
+});
 
 export async function createProSubscription(userId: string) {
   const subscription = await getUserSubscription(userId);
