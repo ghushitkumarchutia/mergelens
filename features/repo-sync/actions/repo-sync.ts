@@ -10,13 +10,21 @@ const REPO_FULL_NAME_PATTERN = /^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/;
 
 const BRANCH_PATTERN = /^[^\s\x00-\x1f]+$/;
 
-export async function syncRepoCodebase(repoFullName: string, branch: string) {
+export type SyncResult = {
+  success: boolean;
+  error?: string;
+};
+
+export async function syncRepoCodebase(
+  repoFullName: string,
+  branch: string,
+): Promise<SyncResult> {
   if (!REPO_FULL_NAME_PATTERN.test(repoFullName)) {
-    throw new Error("Invalid repository name. Expected format: owner/repo");
+    return { success: false, error: "Invalid repository name." };
   }
 
   if (!branch || !BRANCH_PATTERN.test(branch)) {
-    throw new Error("Invalid branch name.");
+    return { success: false, error: "Invalid branch name." };
   }
 
   const session = await getServerSession();
@@ -31,5 +39,12 @@ export async function syncRepoCodebase(repoFullName: string, branch: string) {
     redirect(DASHBOARD_ROUTES.github);
   }
 
-  await triggerRepoSync(installationId, repoFullName, branch);
+  try {
+    await triggerRepoSync(installationId, repoFullName, branch);
+    return { success: true };
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "An unexpected error occurred.";
+    return { success: false, error: message };
+  }
 }
