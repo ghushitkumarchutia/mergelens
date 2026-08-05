@@ -33,6 +33,10 @@ function getButtonLabel(
     return "Re-sync";
   }
 
+  if (status === "failed") {
+    return "Retry Sync";
+  }
+
   return "Sync";
 }
 

@@ -157,6 +157,17 @@ export async function saveRepoChunks(namespace: string, chunks: CodeChunk[]) {
 }
 
 export async function getRepoSyncStatuses(repoFullNames: string[]) {
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
+  await prisma.repoSync.updateMany({
+    where: {
+      repoFullName: { in: repoFullNames },
+      status: { in: ["pending", "syncing"] },
+      updatedAt: { lt: fiveMinutesAgo },
+    },
+    data: { status: "failed" },
+  });
+
   const syncs = await prisma.repoSync.findMany({
     where: { repoFullName: { in: repoFullNames } },
     select: { repoFullName: true, status: true },
