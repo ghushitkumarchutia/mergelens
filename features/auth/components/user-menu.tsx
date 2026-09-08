@@ -152,9 +152,13 @@ export function UserMenu({
         ) : null}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align='end'
-        sideOffset={6}
-        className='w-56 md:w-60 rounded-none bg-ml-surface border border-ml-border p-0 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.25)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)]'
+        align={variant === "compact" ? "start" : "end"}
+        side={variant === "compact" ? "right" : "top"}
+        sideOffset={variant === "compact" ? 10 : 6}
+        className={cn(
+          "rounded-none bg-ml-surface border border-ml-border p-0 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.25)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)]",
+          variant === "profile" ? "w-(--anchor-width)" : "w-56 md:w-60",
+        )}
       >
         <DropdownMenuGroup>
           <DropdownMenuLabel className='p-2.5 md:p-3 rounded-none font-normal bg-ml-surface-2/60 border-b border-ml-border'>
