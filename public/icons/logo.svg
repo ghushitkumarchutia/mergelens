@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 640" role="img" aria-label="MergeLens logo mark">
+  <defs>
+    <linearGradient id="ml-gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="52%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="ml-gradient-reverse" x1="100%" y1="50%" x2="0%" y2="50%">
+      <stop offset="0%" stop-color="#9333ea"/>
+      <stop offset="52%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left converging ribbon -->
+  <path
+    d="M126 82
+       C126 72 137 66 146 72
+       L238 132
+       C246 137 250 145 250 154
+       L250 211
+       C250 220 245 228 237 233
+       L151 285
+       C132 297 121 316 121 338
+       L121 518
+       C121 529 108 536 99 529
+       L74 510
+       C67 505 63 497 63 488
+       L63 106
+       C63 92 72 82 86 82 Z"
+    fill="url(#ml-gradient)"/>
+
+  <!-- Right converging ribbon -->
+  <path
+    d="M354 82
+       C354 72 343 66 334 72
+       L242 132
+       C234 137 230 145 230 154
+       L230 211
+       C230 220 235 228 243 233
+       L329 285
+       C348 297 359 316 359 338
+       L359 518
+       C359 529 372 536 381 529
+       L406 510
+       C413 505 417 497 417 488
+       L417 106
+       C417 92 408 82 394 82 Z"
+    fill="url(#ml-gradient-reverse)"/>
+
+  <!-- Central lens aperture / negative-space ring -->
+  <path
+    d="M240 252
+       C256 283 279 304 310 319
+       C283 331 261 352 240 382
+       C219 352 197 331 170 319
+       C201 304 224 283 240 252 Z"
+    fill="#07090f"/>
+
+  <!-- Four-point optical focus -->
+  <path
+    d="M240 273
+       C251 295 264 308 286 319
+       C264 330 251 343 240 365
+       C229 343 216 330 194 319
+       C216 308 229 295 240 273 Z"
+    fill="url(#ml-gradient)"/>
+</svg>

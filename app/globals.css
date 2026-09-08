@@ -5,8 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --font-syne: 'Syne', sans-serif;
+  --font-manrope: 'Manrope', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+  --font-sans: 'Manrope', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,6 +47,26 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-ml-bg: var(--ml-bg);
+  --color-ml-bg-raised: var(--ml-bg-raised);
+  --color-ml-surface: var(--ml-surface);
+  --color-ml-surface-2: var(--ml-surface-2);
+  --color-ml-border: var(--ml-border);
+  --color-ml-border-strong: var(--ml-border-strong);
+  --color-ml-text: var(--ml-text);
+  --color-ml-text-muted: var(--ml-text-muted);
+  --color-ml-text-dim: var(--ml-text-dim);
+  --color-ml-accent: var(--ml-accent);
+  --color-ml-accent-dim: var(--ml-accent-dim);
+  --color-ml-accent-wash: var(--ml-accent-wash);
+  --color-ml-diff-add: var(--ml-diff-add);
+  --color-ml-diff-add-bg: var(--ml-diff-add-bg);
+  --color-ml-diff-remove: var(--ml-diff-remove);
+  --color-ml-diff-remove-bg: var(--ml-diff-remove-bg);
+
+  --font-ml-display: var(--ml-font-display);
+  --font-ml-mono: var(--ml-font-mono);
 }
 
 :root {
@@ -80,6 +102,26 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --ml-bg: #fafaf8;
+  --ml-bg-raised: #f3f3f0;
+  --ml-surface: #ffffff;
+  --ml-surface-2: #f4f4f2;
+  --ml-border: rgba(20, 20, 22, 0.1);
+  --ml-border-strong: rgba(20, 20, 22, 0.22);
+  --ml-text: #141416;
+  --ml-text-muted: #68686e;
+  --ml-text-dim: #9a9aa0;
+  --ml-accent: #4a56d6;
+  --ml-accent-dim: #8890e8;
+  --ml-accent-wash: rgba(74, 86, 214, 0.06);
+  --ml-diff-add: #2e8f58;
+  --ml-diff-add-bg: rgba(46, 143, 88, 0.08);
+  --ml-diff-remove: #b3453f;
+  --ml-diff-remove-bg: rgba(179, 69, 63, 0.07);
+
+  --ml-font-display: "Syne", sans-serif;
+  --ml-font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 .dark {
@@ -114,6 +156,39 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  --ml-bg: #0a0a0b;
+  --ml-bg-raised: #0e0e10;
+  --ml-surface: #131315;
+  --ml-surface-2: #18181b;
+  --ml-border: rgba(255, 255, 255, 0.09);
+  --ml-border-strong: rgba(255, 255, 255, 0.18);
+  --ml-text: #ededee;
+  --ml-text-muted: #94949b;
+  --ml-text-dim: #5c5c62;
+  --ml-accent: #8c9bff;
+  --ml-accent-dim: #5a63a8;
+  --ml-accent-wash: rgba(140, 155, 255, 0.08);
+  --ml-diff-add: #5cb585;
+  --ml-diff-add-bg: rgba(92, 181, 133, 0.09);
+  --ml-diff-remove: #d07272;
+  --ml-diff-remove-bg: rgba(208, 114, 114, 0.08);
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/Manrope-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
 }
 
 @layer base {
@@ -121,13 +196,21 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Manrope', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6, .font-heading, .font-syne {
+    font-family: 'Syne', sans-serif;
+  }
+  .font-manrope {
+    font-family: 'Manrope', sans-serif;
+  }
+  html {
+    @apply font-sans;
+    font-family: 'Manrope', sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
-  }
-  html {
-    @apply font-sans;
   }
 }
