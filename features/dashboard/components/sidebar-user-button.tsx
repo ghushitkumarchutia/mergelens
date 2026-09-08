@@ -32,7 +32,7 @@ export function SidebarUserButton({
           className={cn(
             "rounded-none transition-all duration-150",
             isCollapsed
-              ? "[&_button]:size-8 md:[&_button]:size-8.5 [&_button]:p-0 [&_button]:justify-center [&_button]:rounded-none [&_button]:border-ml-border/70 hover:[&_button]:border-ml-border-strong hover:[&_button]:bg-ml-surface-2 [&_button]:mx-auto"
+              ? "[&_button]:size-8 [&_button]:p-0 [&_button]:justify-center [&_button]:rounded-none [&_button]:border-ml-border/70 hover:[&_button]:border-ml-border-strong hover:[&_button]:bg-ml-surface-2 [&_button]:mx-auto"
               : "w-full [&_button]:h-11 md:[&_button]:h-11.5 [&_button]:w-full [&_button]:justify-start [&_button]:gap-2.5 [&_button]:px-2 md:[&_button]:px-2.5 [&_button]:rounded-none [&_button]:border [&_button]:border-transparent hover:[&_button]:border-ml-border/60 hover:[&_button]:bg-ml-surface-2",
           )}
         />

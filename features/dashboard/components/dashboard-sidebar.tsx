@@ -74,9 +74,9 @@ export function DashboardSidebar({
             className={cn(
               "shrink-0 rounded-none border-0 bg-transparent hover:bg-transparent active:bg-transparent text-ml-text-muted hover:text-ml-text transition-colors duration-150 shadow-none",
               isCollapsed
-                ? "size-8 md:size-8.5 mx-auto m-0"
+                ? "size-8 mx-auto m-0"
                 : "size-8.5 md:size-9 mr-0 md:-mr-0.5",
-              "group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:m-0 group-data-[collapsible=icon]:size-8 md:group-data-[collapsible=icon]:size-8.5",
+              "group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:m-0 group-data-[collapsible=icon]:size-8",
             )}
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           />
