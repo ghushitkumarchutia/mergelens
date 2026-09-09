@@ -2,13 +2,23 @@ import { App } from "octokit";
 
 let githubApp: App | null = null;
 
-export function getGithubApp() {
+export function getGithubApp(): App {
   if (!githubApp) {
+    const appId = process.env.GITHUB_APP_ID;
+    const privateKey = process.env.GITHUB_APP_PRIVATE_KEY;
+    const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
+
+    if (!appId || !privateKey || !webhookSecret) {
+      throw new Error(
+        "Missing required GitHub App configuration. Ensure GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, and GITHUB_WEBHOOK_SECRET are defined.",
+      );
+    }
+
     githubApp = new App({
-      appId: process.env.GITHUB_APP_ID!,
-      privateKey: process.env.GITHUB_APP_PRIVATE_KEY!.replace(/\\n/g, "\n"),
+      appId,
+      privateKey: privateKey.replace(/\\n/g, "\n"),
       webhooks: {
-        secret: process.env.GITHUB_WEBHOOK_SECRET!,
+        secret: webhookSecret,
       },
     });
   }
@@ -16,7 +26,7 @@ export function getGithubApp() {
   return githubApp;
 }
 
-export function getGithubInstallUrl(userId: string) {
+export function getGithubInstallUrl(userId: string): string {
   const appName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME || "mergelens-pr";
   const url = new URL(`https://github.com/apps/${appName}/installations/new`);
   url.searchParams.set("state", userId);
