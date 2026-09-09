@@ -129,7 +129,7 @@ export default async function DashboardOverviewPage() {
                 variant='outline'
                 nativeButton={false}
                 render={<Link href={DASHBOARD_ROUTES.github} />}
-                className='rounded-none border border-ml-border bg-ml-surface-2 hover:bg-ml-surface text-ml-text font-manrope font-semibold text-xs h-8 px-3 flex items-center gap-1.5'
+                className='group/btn rounded-none border border-ml-border hover:border-ml-border-strong bg-ml-surface-2 hover:bg-ml-surface text-ml-text font-manrope font-semibold text-xs h-8 px-3 flex items-center gap-1.5 transition-all duration-150 active:translate-y-px cursor-pointer select-none'
               >
                 <span>
                   {overview.githubConnected
@@ -138,7 +138,7 @@ export default async function DashboardOverviewPage() {
                 </span>
                 <HugeiconsIcon
                   icon={ArrowRight01Icon}
-                  className='size-3.5 opacity-70'
+                  className='size-3.5 opacity-70 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 transition-all duration-150'
                 />
               </Button>
             </CardContent>
@@ -169,12 +169,12 @@ export default async function DashboardOverviewPage() {
                 variant='outline'
                 nativeButton={false}
                 render={<Link href={DASHBOARD_ROUTES.repos} />}
-                className='rounded-none border border-ml-border bg-ml-surface-2 hover:bg-ml-surface text-ml-text font-manrope font-semibold text-xs h-8 px-3 flex items-center gap-1.5'
+                className='group/btn rounded-none border border-ml-border hover:border-ml-border-strong bg-ml-surface-2 hover:bg-ml-surface text-ml-text font-manrope font-semibold text-xs h-8 px-3 flex items-center gap-1.5 transition-all duration-150 active:translate-y-px cursor-pointer select-none'
               >
                 <span>View Repositories</span>
                 <HugeiconsIcon
                   icon={ArrowRight01Icon}
-                  className='size-3.5 opacity-70'
+                  className='size-3.5 opacity-70 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 transition-all duration-150'
                 />
               </Button>
             </CardContent>
@@ -205,12 +205,12 @@ export default async function DashboardOverviewPage() {
                 variant='outline'
                 nativeButton={false}
                 render={<Link href={DASHBOARD_ROUTES.pullRequest} />}
-                className='rounded-none border border-ml-border bg-ml-surface-2 hover:bg-ml-surface text-ml-text font-manrope font-semibold text-xs h-8 px-3 flex items-center gap-1.5'
+                className='group/btn rounded-none border border-ml-border hover:border-ml-border-strong bg-ml-surface-2 hover:bg-ml-surface text-ml-text font-manrope font-semibold text-xs h-8 px-3 flex items-center gap-1.5 transition-all duration-150 active:translate-y-px cursor-pointer select-none'
               >
                 <span>View Pull Requests</span>
                 <HugeiconsIcon
                   icon={ArrowRight01Icon}
-                  className='size-3.5 opacity-70'
+                  className='size-3.5 opacity-70 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 transition-all duration-150'
                 />
               </Button>
             </CardContent>
