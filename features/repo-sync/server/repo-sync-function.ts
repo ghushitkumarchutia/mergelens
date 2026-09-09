@@ -13,15 +13,23 @@ export const syncRepoCodebaseFunction = inngest.createFunction(
     id: "sync-repo-codebase",
     triggers: { event: "repo/sync.requested" },
     onFailure: async ({ event }) => {
-      await prisma.repoSync.update({
-        where: { id: event.data.event.data.repoSyncId },
+      const repoSyncId = event.data.event.data?.repoSyncId;
+      if (!repoSyncId) {
+        return;
+      }
+
+      await prisma.repoSync.updateMany({
+        where: { id: repoSyncId },
         data: { status: "failed" },
       });
     },
   },
 
   async ({ event, step }) => {
-    const repoSyncId = event.data.repoSyncId;
+    const repoSyncId = event.data?.repoSyncId;
+    if (!repoSyncId) {
+      throw new Error("Missing required repoSyncId in event payload");
+    }
 
     const repoSync = await step.run("mark-syncing", async () => {
       return prisma.repoSync.update({

@@ -1,5 +1,5 @@
 import { CodeChunk } from "@/features/reviews/types/review";
-import { RepoFile } from "../types";
+import { RepoFile, RepoSyncStatus } from "../types";
 import { getGithubApp } from "@/features/github/utils/github-app";
 import { getPineconeIndex } from "@/features/pinecone/client";
 import { prisma } from "@/lib/db";
@@ -52,19 +52,19 @@ type TreeEntry = {
   size?: number;
 };
 
-export function buildRepoNamespace(repoFullName: string) {
+export function buildRepoNamespace(repoFullName: string): string {
   return `${repoFullName.replace("/", "--")}--codebase`;
 }
 
-function hasCodeExtension(path: string) {
+function hasCodeExtension(path: string): boolean {
   return CODE_EXTENSIONS.some((extension) => path.endsWith(extension));
 }
 
-function isSkippedPath(path: string) {
+function isSkippedPath(path: string): boolean {
   return SKIPPED_FOLDERS.some((folder) => path.includes(folder));
 }
 
-function isIndexableFile(entry: TreeEntry) {
+function isIndexableFile(entry: TreeEntry): boolean {
   if (entry.type !== "blob" || !entry.path || !entry.sha) {
     return false;
   }
@@ -80,7 +80,7 @@ function isIndexableFile(entry: TreeEntry) {
   return hasCodeExtension(entry.path);
 }
 
-function buildChunkId(filePath: string, part: number) {
+function buildChunkId(filePath: string, part: number): string {
   return `repo--${filePath}--part-${part}`;
 }
 
@@ -114,33 +114,57 @@ export async function getRepoFiles(
   const octokit = await app.getInstallationOctokit(installationId);
   const [owner, repo] = repoFullName.split("/");
 
+  if (!owner || !repo) {
+    throw new Error(`Invalid repo full name: "${repoFullName}"`);
+  }
+
   const { data: tree } = await octokit.request(
     "GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
     { owner, repo, tree_sha: branch, recursive: "1" },
   );
 
-  const entries = tree.tree.filter(isIndexableFile).slice(0, MAX_FILES);
+  const entries = (tree.tree ?? []).filter(isIndexableFile).slice(0, MAX_FILES);
   const files: RepoFile[] = [];
 
   for (const entry of entries) {
-    const { data: blob } = await octokit.request(
-      "GET /repos/{owner}/{repo}/git/blobs/{file_sha}",
-      { owner, repo, file_sha: entry.sha! },
-    );
+    if (!entry.sha || !entry.path) {
+      continue;
+    }
 
-    const content = Buffer.from(blob.content, "base64").toString("utf-8");
-    files.push({ filePath: entry.path!, content });
+    try {
+      const { data: blob } = await octokit.request(
+        "GET /repos/{owner}/{repo}/git/blobs/{file_sha}",
+        { owner, repo, file_sha: entry.sha },
+      );
+
+      const content = Buffer.from(blob.content ?? "", "base64").toString(
+        "utf-8",
+      );
+      files.push({ filePath: entry.path, content });
+    } catch (err) {
+      console.warn(`[RepoSync] Failed to fetch blob for ${entry.path}:`, err);
+    }
   }
 
   return files;
 }
 
-export async function deleteRepoNamespace(namespace: string) {
-  const index = getPineconeIndex();
-  await index.deleteNamespace(namespace);
+export async function deleteRepoNamespace(namespace: string): Promise<void> {
+  try {
+    const index = getPineconeIndex();
+    await index.deleteNamespace(namespace);
+  } catch (error) {
+    console.warn(
+      `[Pinecone] Could not delete namespace "${namespace}":`,
+      error,
+    );
+  }
 }
 
-export async function saveRepoChunks(namespace: string, chunks: CodeChunk[]) {
+export async function saveRepoChunks(
+  namespace: string,
+  chunks: CodeChunk[],
+): Promise<void> {
   const index = getPineconeIndex();
 
   for (let start = 0; start < chunks.length; start += UPSERT_BATCH_SIZE) {
@@ -156,7 +180,13 @@ export async function saveRepoChunks(namespace: string, chunks: CodeChunk[]) {
   }
 }
 
-export async function getRepoSyncStatuses(repoFullNames: string[]) {
+export async function getRepoSyncStatuses(
+  repoFullNames: string[],
+): Promise<Record<string, RepoSyncStatus>> {
+  if (repoFullNames.length === 0) {
+    return {};
+  }
+
   const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
   await prisma.repoSync.updateMany({
@@ -173,10 +203,10 @@ export async function getRepoSyncStatuses(repoFullNames: string[]) {
     select: { repoFullName: true, status: true },
   });
 
-  const statusByRepo: Record<string, string> = {};
+  const statusByRepo: Record<string, RepoSyncStatus> = {};
 
   for (const sync of syncs) {
-    statusByRepo[sync.repoFullName] = sync.status;
+    statusByRepo[sync.repoFullName] = sync.status as RepoSyncStatus;
   }
 
   return statusByRepo;
@@ -186,7 +216,7 @@ export async function triggerRepoSync(
   installationId: number,
   repoFullName: string,
   branch: string,
-) {
+): Promise<void> {
   const repoSync = await prisma.repoSync.upsert({
     where: { repoFullName },
     create: { installationId, repoFullName, branch, status: "pending" },
