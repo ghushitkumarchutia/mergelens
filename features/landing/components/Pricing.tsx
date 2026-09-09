@@ -40,7 +40,7 @@ const PRICING_PLANS: readonly PricingPlan[] = [
   },
   {
     name: "Pro",
-    price: "₹499",
+    price: "₹299",
     period: "/ month, per seat",
     description: "For teams shipping fast, on more than one repo.",
     isPopular: true,
