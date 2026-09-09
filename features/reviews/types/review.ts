@@ -8,3 +8,8 @@ export type CodeChunk = {
   filePath: string;
   text: string;
 };
+
+export type ReviewContextSnippet = {
+  filePath: string;
+  text: string;
+};

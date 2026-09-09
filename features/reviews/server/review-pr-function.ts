@@ -1,6 +1,6 @@
 import { inngest } from "@/features/inngest/client";
 import { prisma } from "@/lib/db";
-import { formatPrFilesForReview, getPullRequestFiles } from "./pr-files";
+import { getPullRequestFiles } from "./pr-files";
 import { generateReview } from "./generate-review";
 import { postPrComment } from "./post-pr-comment";
 import { chunkPrFiles } from "../utils/chunk-code";
@@ -12,9 +12,26 @@ import {
 import { buildRepoNamespace } from "@/features/repo-sync/server/repo-sync";
 
 export const reviewPullRequest = inngest.createFunction(
-  { id: "review-pull-request", triggers: { event: "github/pr.received" } },
+  {
+    id: "review-pull-request",
+    triggers: { event: "github/pr.received" },
+    onFailure: async ({ event }) => {
+      const pullRequestId = event.data.event.data?.pullRequestId;
+      if (!pullRequestId) {
+        return;
+      }
+
+      await prisma.pullRequest.updateMany({
+        where: { id: pullRequestId },
+        data: { status: "failed" },
+      });
+    },
+  },
   async ({ event, step }) => {
-    const pullRequestId = event.data.pullRequestId;
+    const pullRequestId = event.data?.pullRequestId;
+    if (!pullRequestId) {
+      throw new Error("Missing required pullRequestId in event payload");
+    }
 
     const pullRequest = await step.run("mark-processing", async () => {
       return prisma.pullRequest.update({
@@ -22,6 +39,14 @@ export const reviewPullRequest = inngest.createFunction(
         data: { status: "processing" },
       });
     });
+
+    if (!pullRequest) {
+      return {
+        pullRequestId,
+        status: "skipped",
+        reason: "pull request not found",
+      };
+    }
 
     const chunks = await step.run("breakdown-code", async () => {
       const files = await getPullRequestFiles(
@@ -37,7 +62,12 @@ export const reviewPullRequest = inngest.createFunction(
       await step.run("mark-reviewed-no-code", async () => {
         await prisma.pullRequest.update({
           where: { id: pullRequestId },
-          data: { status: "reviewed" },
+          data: {
+            status: "reviewed",
+            reviewComment:
+              "No reviewable code changes detected in this pull request.",
+            reviewedAt: new Date(),
+          },
         });
       });
 
@@ -86,11 +116,15 @@ export const reviewPullRequest = inngest.createFunction(
     });
 
     await step.run("post-pr-comment", async () => {
+      const commentBody =
+        review?.trim() ||
+        "### MergeLens AI Review\n\nNo significant issues or suggestions identified.";
+
       await postPrComment(
         pullRequest.installationId,
         pullRequest.repoFullName,
         pullRequest.prNumber,
-        review,
+        commentBody,
       );
     });
 
