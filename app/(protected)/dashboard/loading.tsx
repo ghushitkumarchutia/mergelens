@@ -21,7 +21,7 @@ export default function DashboardLoading() {
               className='rounded-none border border-ml-border bg-ml-surface p-4 sm:p-5 flex items-center gap-4'
             >
               <Skeleton className='size-13 rounded-none bg-ml-surface-2 shrink-0' />
-              <div className='h-[52px] flex flex-col justify-between py-0.5 flex-1 min-w-0'>
+              <div className='h-13 flex flex-col justify-between py-0.5 flex-1 min-w-0'>
                 <Skeleton className='h-3.5 w-20 rounded-none bg-ml-surface-2/60' />
                 <Skeleton className='h-7 w-16 rounded-none bg-ml-surface-2' />
               </div>
