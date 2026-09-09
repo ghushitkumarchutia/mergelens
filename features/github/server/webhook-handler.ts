@@ -20,7 +20,10 @@ export type PullRequestWebhookPayload = {
   };
 };
 
-async function isSignatureValid(payload: string, signature: string | null) {
+async function isSignatureValid(
+  payload: string,
+  signature: string | null,
+): Promise<boolean> {
   if (!signature) {
     return false;
   }
@@ -33,7 +36,7 @@ async function isSignatureValid(payload: string, signature: string | null) {
   }
 }
 
-export async function handleGithubWebhook(request: Request) {
+export async function handleGithubWebhook(request: Request): Promise<Response> {
   const payload = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
   const eventName = request.headers.get("x-github-event");
@@ -48,9 +51,23 @@ export async function handleGithubWebhook(request: Request) {
     return Response.json({ received: true });
   }
 
-  const event = JSON.parse(payload) as PullRequestWebhookPayload;
+  let event: PullRequestWebhookPayload;
+  try {
+    event = JSON.parse(payload) as PullRequestWebhookPayload;
+  } catch {
+    return Response.json({ error: "Invalid JSON payload" }, { status: 400 });
+  }
 
-  console.log("event", event);
+  if (
+    !event.installation?.id ||
+    !event.repository?.full_name ||
+    !event.pull_request?.number
+  ) {
+    return Response.json({
+      received: true,
+      skipped: "missing required payload fields",
+    });
+  }
 
   if (!REVIEWABLE_ACTIONS.includes(event.action)) {
     return Response.json({ received: true });

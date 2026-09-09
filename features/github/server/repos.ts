@@ -12,11 +12,7 @@ export type GithubRepo = {
 };
 
 function getRepoVisibility(isPrivate?: boolean): GithubRepo["visibility"] {
-  if (isPrivate) {
-    return "private";
-  }
-
-  return "public";
+  return isPrivate ? "private" : "public";
 }
 
 export type InstallationReposPage = {
@@ -54,20 +50,21 @@ export async function getInstallationReposPage(
   installationId: number,
   page = 1,
 ): Promise<InstallationReposPage> {
+  const safePage = Math.max(1, Math.floor(page));
   const app = getGithubApp();
   const octokit = await app.getInstallationOctokit(installationId);
   const { data } = await octokit.request("GET /installation/repositories", {
     per_page: REPOS_PER_PAGE,
-    page,
+    page: safePage,
   });
 
-  const totalCount = data.total_count;
-  const repos = data.repositories.map(mapRepo);
+  const totalCount = data.total_count ?? 0;
+  const repos = (data.repositories ?? []).map(mapRepo);
 
   return {
     repos,
     totalCount,
-    page,
-    hasMore: page * REPOS_PER_PAGE < totalCount,
+    page: safePage,
+    hasMore: safePage * REPOS_PER_PAGE < totalCount,
   };
 }

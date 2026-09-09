@@ -2,6 +2,7 @@ import { cache } from "react";
 import type { GithubInstallationStatus } from "@/features/dashboard/lib/types";
 import { getGithubApp } from "@/features/github/utils/github-app";
 import { prisma } from "@/lib/db";
+
 function getAccountLogin(
   account: { login?: string; slug?: string } | null | undefined,
 ): string | null {
@@ -24,7 +25,9 @@ function buildDisconnectedStatus(): GithubInstallationStatus {
   return { connected: false, accountLogin: null, installedAt: null };
 }
 
-export const getInstallationStatus = cache(async function getInstallationStatus(userId: string) {
+export const getInstallationStatus = cache(async function getInstallationStatus(
+  userId: string,
+): Promise<GithubInstallationStatus> {
   const installation = await prisma.githubInstallation.findUnique({
     where: {
       userId,
@@ -42,7 +45,10 @@ export const getInstallationStatus = cache(async function getInstallationStatus(
   };
 });
 
-export async function saveInstallation(userId: string, installationId: number) {
+export async function saveInstallation(
+  userId: string,
+  installationId: number,
+): Promise<void> {
   const app = getGithubApp();
 
   const { data } = await app.octokit.request(
@@ -68,11 +74,13 @@ export async function saveInstallation(userId: string, installationId: number) {
   });
 }
 
-export async function deleteInstallation(userId: string) {
-  await prisma.githubInstallation.delete({ where: { userId } });
+export async function deleteInstallation(userId: string): Promise<void> {
+  await prisma.githubInstallation.deleteMany({ where: { userId } });
 }
 
-export async function getUserIdByInstallationId(installationId: number) {
+export async function getUserIdByInstallationId(
+  installationId: number,
+): Promise<string | null> {
   const installation = await prisma.githubInstallation.findFirst({
     where: { installationId },
     select: { userId: true },
@@ -85,7 +93,9 @@ export async function getUserIdByInstallationId(installationId: number) {
   return installation.userId;
 }
 
-export const getUserInstallationId = cache(async function getUserInstallationId(userId: string) {
+export const getUserInstallationId = cache(async function getUserInstallationId(
+  userId: string,
+): Promise<number | null> {
   const installation = await prisma.githubInstallation.findUnique({
     where: { userId },
     select: { installationId: true },
