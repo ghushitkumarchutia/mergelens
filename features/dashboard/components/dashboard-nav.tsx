@@ -77,6 +77,7 @@ export function DashboardNav() {
                   render={
                     <Link
                       href={item.href}
+                      prefetch={true}
                       aria-current={active ? "page" : undefined}
                       className={cn(
                         "flex items-center w-full gap-2.5",

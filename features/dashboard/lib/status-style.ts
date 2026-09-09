@@ -1,22 +1,21 @@
 import { cn } from "@/lib/utils";
 
 export const statusBadgeClass = {
-  success:
-    "border-green-500/40 bg-green-500/15 text-green-700 dark:text-green-400",
+  success: "border-ml-diff-add/40 bg-ml-diff-add-bg text-ml-diff-add",
   warning:
-    "border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  danger: "border-red-500/40 bg-red-500/15 text-red-700 dark:text-red-400",
-  info: "border-blue-500/40 bg-blue-500/15 text-blue-700 dark:text-blue-400",
-  neutral: "border-border bg-muted text-muted-foreground",
+    "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  danger: "border-ml-diff-remove/40 bg-ml-diff-remove-bg text-ml-diff-remove",
+  info: "border-ml-accent/40 bg-ml-accent-wash text-ml-accent",
+  neutral: "border-ml-border bg-ml-surface-2 text-ml-text-muted",
 } as const;
 
 export const statusButtonClass = {
   success:
-    "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500/50 dark:bg-green-600 dark:hover:bg-green-500",
+    "rounded-none font-manrope font-semibold bg-ml-text text-ml-bg hover:bg-ml-text/90 active:translate-y-px transition-all border border-transparent select-none shadow-none focus-visible:ring-1 focus-visible:ring-ml-border-strong",
   danger:
-    "border-red-500/50 bg-red-500/10 text-red-700 hover:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/20",
+    "rounded-none font-manrope font-semibold bg-transparent text-ml-diff-remove border border-ml-diff-remove/40 hover:bg-ml-diff-remove-bg active:translate-y-px transition-all select-none shadow-none",
   warning:
-    "border-amber-500/50 bg-amber-500/10 text-amber-800 hover:bg-amber-500/20 dark:text-amber-400",
+    "rounded-none font-manrope font-semibold bg-transparent text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 active:translate-y-px transition-all select-none shadow-none",
 } as const;
 
 export function statusBadge(
@@ -24,7 +23,7 @@ export function statusBadge(
   className?: string,
 ) {
   return cn(
-    "inline-flex items-center rounded-none border px-2 py-0.5 text-xs font-medium capitalize",
+    "inline-flex items-center rounded-none border px-2 py-0.5 font-ml-mono text-[10.5px] font-medium tracking-[0.04em] uppercase select-none",
     statusBadgeClass[tone],
     className,
   );

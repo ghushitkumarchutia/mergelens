@@ -21,7 +21,11 @@ declare global {
 
 const RAZORPAY_SCRIPT_URL = "https://checkout.razorpay.com/v1/checkout.js";
 
-export function UpgradeButton() {
+type UpgradeButtonProps = {
+  className?: string;
+};
+
+export function UpgradeButton({ className }: UpgradeButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -64,15 +68,42 @@ export function UpgradeButton() {
       setLoading(false);
     }
   }
+
   return (
     <>
-      <Script src={RAZORPAY_SCRIPT_URL} strategy='lazyOnload'></Script>
+      <Script src={RAZORPAY_SCRIPT_URL} strategy='lazyOnload' />
       <Button
         onClick={handleUpgrade}
         disabled={loading}
-        className={cn(statusButtonClass.success)}
+        className={cn(
+          statusButtonClass.success,
+          "h-9 md:h-9.5 px-4 md:px-5 text-[12.5px] md:text-[13px] font-semibold tracking-[-0.01em] gap-2",
+          className,
+        )}
       >
-        {loading ? "Opening checkout…" : "Upgrade to Pro"}
+        {loading ? (
+          <>
+            <span
+              className='size-3.5 border-2 border-ml-bg/30 border-t-ml-bg animate-spin shrink-0'
+              aria-hidden='true'
+            />
+            <span>Opening checkout…</span>
+          </>
+        ) : (
+          <>
+            <span>Upgrade to Pro</span>
+            <svg
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2.25'
+              className='size-3.5 shrink-0 transition-transform group-hover:translate-x-0.5'
+              aria-hidden='true'
+            >
+              <path d='M5 12h14m-7-7 7 7-7 7' />
+            </svg>
+          </>
+        )}
       </Button>
     </>
   );
