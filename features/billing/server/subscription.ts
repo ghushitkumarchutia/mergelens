@@ -2,11 +2,10 @@ import { cache } from "react";
 import type { UserSubscription } from "@/features/dashboard/lib/types";
 import { getRazorpay } from "@/features/billing/lib/razorpay";
 import { prisma } from "@/lib/db";
-export const getUserSubscription = cache(
-  async function getUserSubscription(
-    userId: string,
-  ): Promise<UserSubscription> {
-    const user = await prisma.user.findUnique({
+export const getUserSubscription = cache(async function getUserSubscription(
+  userId: string,
+): Promise<UserSubscription> {
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       plan: true,
@@ -30,12 +29,12 @@ export const getUserSubscription = cache(
   }
 
   if (user.subscriptionStatus === "canceled") {
-    const stillActive =
+    const stillInGracePeriod =
       user.subscriptionRenewsAt !== null &&
       user.subscriptionRenewsAt > new Date();
 
-    if (stillActive) {
-      return { plan: "pro", status: "active", renewsAt };
+    if (stillInGracePeriod) {
+      return { plan: "pro", status: "canceled", renewsAt };
     }
 
     return { plan: "free", status: "canceled", renewsAt };
@@ -86,11 +85,15 @@ export async function createProSubscription(userId: string) {
 export async function cancelProSubscription(userId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { razorpaySubscriptionId: true },
+    select: { razorpaySubscriptionId: true, subscriptionStatus: true },
   });
 
   if (!user?.razorpaySubscriptionId) {
     throw new Error("No active subscription found.");
+  }
+
+  if (user.subscriptionStatus === "canceled") {
+    throw new Error("Subscription is already canceled.");
   }
 
   const razorpay = getRazorpay();

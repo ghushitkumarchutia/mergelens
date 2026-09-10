@@ -249,7 +249,8 @@ function SubscriptionTab({
               </div>
               {renewalDate ? (
                 <p className='font-ml-mono text-[11px] text-ml-text-muted mt-0.5'>
-                  Renews {renewalDate}
+                  {subscription.status === "canceled" ? "Expires" : "Renews"}{" "}
+                  {renewalDate}
                 </p>
               ) : (
                 <p className='font-ml-mono text-[11px] text-ml-text-dim mt-0.5'>

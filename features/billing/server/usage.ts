@@ -30,7 +30,7 @@ export async function getReviewsThisMonth(userId: string): Promise<number> {
 export async function canUserReview(userId: string): Promise<boolean> {
   const subscription = await getUserSubscription(userId);
 
-  if (subscription.plan === "pro" && subscription.status === "active") {
+  if (subscription.plan === "pro") {
     return true;
   }
 
@@ -42,7 +42,7 @@ export async function getUsageSummary(userId: string): Promise<UsageSummary> {
   const subscription = await getUserSubscription(userId);
   const used = await getReviewsThisMonth(userId);
 
-  if (subscription.plan === "pro" && subscription.status === "active") {
+  if (subscription.plan === "pro") {
     return { used, limit: null };
   }
 
