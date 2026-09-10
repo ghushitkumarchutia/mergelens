@@ -22,7 +22,9 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
 
-  const page = Math.max(1, Number(searchParams.get("page") ?? "1"));
+  const rawPage = Number(searchParams.get("page"));
+  const page =
+    Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
 
   try {
     const data = await getInstallationReposPage(installationId, page);

@@ -77,48 +77,50 @@ export async function POST(request: Request) {
     ? new Date(subscription.current_end * 1000)
     : null;
 
-  if (event.event === "subscription.activated") {
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        plan: "pro",
-        razorpaySubscriptionId: subscription.id,
-        subscriptionStatus: "active",
-        subscriptionRenewsAt: renewsAt,
-      },
-    });
-  }
+  switch (event.event) {
+    case "subscription.activated":
+      await prisma.user.updateMany({
+        where: { id: userId },
+        data: {
+          plan: "pro",
+          razorpaySubscriptionId: subscription.id,
+          subscriptionStatus: "active",
+          subscriptionRenewsAt: renewsAt,
+        },
+      });
+      break;
 
-  if (event.event === "subscription.charged") {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { subscriptionRenewsAt: renewsAt },
-    });
-  }
+    case "subscription.charged":
+      await prisma.user.updateMany({
+        where: { id: userId },
+        data: { subscriptionRenewsAt: renewsAt },
+      });
+      break;
 
-  if (event.event === "subscription.cancelled") {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { subscriptionStatus: "canceled" },
-    });
-  }
+    case "subscription.cancelled":
+      await prisma.user.updateMany({
+        where: { id: userId },
+        data: { subscriptionStatus: "canceled" },
+      });
+      break;
 
-  if (event.event === "subscription.halted") {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { subscriptionStatus: "halted" },
-    });
-  }
+    case "subscription.halted":
+      await prisma.user.updateMany({
+        where: { id: userId },
+        data: { subscriptionStatus: "halted" },
+      });
+      break;
 
-  if (event.event === "subscription.completed") {
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        plan: "free",
-        subscriptionStatus: "canceled",
-        subscriptionRenewsAt: null,
-      },
-    });
+    case "subscription.completed":
+      await prisma.user.updateMany({
+        where: { id: userId },
+        data: {
+          plan: "free",
+          subscriptionStatus: "canceled",
+          subscriptionRenewsAt: null,
+        },
+      });
+      break;
   }
 
   return Response.json({ received: true });
