@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://mergelens.com",
+    process.env.NEXT_PUBLIC_APP_URL || "https://mergelens-zeta.vercel.app",
   ),
   title: {
     default: "MergeLens — RAG-Native AI Pull Request Reviewer",
@@ -26,17 +26,17 @@ export const metadata: Metadata = {
     "MergeLens embeds your entire codebase into Pinecone and retrieves the exact functions and files a diff touches. AI code reviews with full architectural context, not just eleven changed lines.",
   keywords: [
     "AI code review",
-    "pull request review",
+    "pull request reviewer",
+    "automated PR review",
+    "GitHub code review bot",
+    "AI pull request feedback",
+    "codebase-aware code review",
     "RAG code review",
-    "GitHub PR review bot",
-    "retrieval augmented generation",
-    "automated code reviews",
     "developer tools",
-    "Pinecone code search",
-    "Inngest workflows",
-    "Next.js developer tools",
+    "code review automation",
+    "GitHub App code reviewer",
   ],
-  authors: [{ name: "MergeLens Team", url: "https://mergelens.com" }],
+  authors: [{ name: "MergeLens" }],
   creator: "MergeLens",
   publisher: "MergeLens",
   formatDetection: {
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://mergelens.com",
+    url: "/",
     siteName: "MergeLens",
     title: "MergeLens — RAG-Native AI Pull Request Reviewer",
     description:
@@ -60,19 +60,16 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/icons/logo.svg",
-        width: 1200,
-        height: 630,
-        alt: "MergeLens — AI Code Review Platform",
+        alt: "MergeLens",
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "MergeLens — RAG-Native AI Pull Request Reviewer",
     description:
       "Every pull request, reviewed with full architectural context. Installs as a GitHub App.",
     images: ["/icons/logo.svg"],
-    creator: "@mergelens",
   },
   robots: {
     index: true,
@@ -94,14 +91,16 @@ const JSON_LD = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "MergeLens",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://mergelens-zeta.vercel.app",
   applicationCategory: "DeveloperApplication",
-  operatingSystem: "Cloud",
+  operatingSystem: "Web",
   description:
     "RAG-Native AI pull request reviewer that embeds your codebase to provide architecture-aware code reviews on GitHub pull requests.",
   offers: {
     "@type": "Offer",
     price: "0",
     priceCurrency: "INR",
+    description: "Free tier — 5 AI reviews per month",
   },
 };
 
@@ -111,11 +110,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='en'
-      className='h-full antialiased'
-      suppressHydrationWarning
-    >
+    <html lang='en' className='h-full antialiased' suppressHydrationWarning>
       <body className='min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-ml-accent selection:text-white'>
         <script
           type='application/ld+json'
